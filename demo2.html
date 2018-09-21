@@ -1,0 +1,127 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <style>
+    #ani {
+      display: inline-block;
+      height: 48px;
+      width: 48px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div id='ani'></div>
+    <div>
+      <button id="stop">stop</button>
+      <button id="start">start</button>
+      <button id="getStep">getStep</button>
+    </div>
+  </div>
+</body>
+<script>
+
+  function Animation(option) {
+    this.$el = document.querySelector(option.el);
+    this.$trajectory = option.trajectory || [];
+    this.$backgroundUrl = option.backgroundUrl || '';
+    this.$cycleTime = option.cycleTime || 2000;
+    this.$setInterval = null;
+    this.$handleClick = option.handleClick;
+    this.count = 0;
+    this.init()
+  }
+
+  Animation.prototype.init = function () {
+    this.$el.style.backgroundImage = 'url(' + this.$backgroundUrl + ')';
+    this.$el.style.backgroundRepeat = 'no-repeat';
+
+  }
+  Animation.prototype.createAnimation = function () {
+    if (this.$trajectory == undefined) {
+      return
+    }
+    var step = this.$trajectory.length;
+    var trajectory = this.$trajectory;
+    var _this = this;
+    this.$setInterval = window.setInterval(function () {
+      _this.$el.style.backgroundPositionX = trajectory[_this.count].x + 'px';
+      _this.$el.style.backgroundPositionY = trajectory[_this.count].y + 'px';
+      _this.count++;
+      if (_this.count >= step) {
+        _this.count = 0
+        // window.clearInterval(_this.$setInterval);
+      }
+
+    }, this.$cycleTime / step)
+
+  }
+  Animation.prototype.stop = function () {
+    window.clearInterval(this.$setInterval);
+    this.$setInterval = null;
+  }
+  Animation.prototype.start = function () {
+    this.$setInterval == null && this.createAnimation();
+  }
+  Animation.prototype.getStep = function () {
+    return this.count;
+  }
+  var option = {
+    el: '#ani',
+    backgroundUrl: './img/loading.png',
+    cycleTime: 2000,
+    handleClick: function () {
+
+    },
+    trajectory: [{
+      x: 3,
+      y: 0
+    }, {
+      x: -261,
+      y: 0
+    }, {
+      x: -393,
+      y: 0
+    },
+    {
+      x: -437,
+      y: 0
+    }, {
+      x: -877,
+      y: 0
+    }, {
+      x: -921,
+      y: 0
+    }, {
+      x: -1317,
+      y: 0
+    }, {
+      x: -1757,
+      y: 0
+    }, {
+      x: -2021,
+      y: 0
+    }, {
+      x: 3,
+      y: 0
+    }]
+  }
+  var animation = new Animation(option);
+  animation.createAnimation();
+  document.getElementById('stop').addEventListener('click', function () {
+    animation.stop();
+  }, false)
+  document.getElementById('start').addEventListener('click', function () {
+
+    animation.start();
+  }, false)
+  document.getElementById('getStep').addEventListener('click', function () {
+
+    var step = animation.getStep();
+    console.log(step)
+  }, false)
+</script>
+
+</html>

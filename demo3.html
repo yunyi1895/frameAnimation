@@ -1,0 +1,209 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <style>
+    body {
+      position: relative;
+    }
+
+    #ani {
+      display: inline-block;
+      height: 48px;
+      width: 48px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div id='ani'></div>
+    <div>
+      <button id="stop">stop</button>
+      <button id="start">start</button>
+      <button id="getStep">getStep</button>
+      <button id="stopMove">stopMove</button>
+      <button id="startMove">startMove</button>
+    </div>
+  </div>
+</body>
+<script>
+
+  function Animation(option) {
+    this.$el = document.querySelector(option.el);
+    this.$trajectory = option.trajectory || [];
+    this.$backgroundUrl = option.backgroundUrl || '';
+    this.$cycleTime = option.cycleTime || 2000;
+    this.$setInterval = null;
+    this.$handleClick = option.handleClick;
+    this.count = 0;
+    this.moveCount = 0;
+    this.$moveType = option.moveType || 'normal';
+    this.$moveData = option.moveData;
+    this.$moveInterval = null;
+    this.$moveDirection = true;
+    this.init()
+  }
+
+  Animation.prototype.init = function () {
+    this.$el.style.backgroundImage = 'url(' + this.$backgroundUrl + ')';
+    this.$el.style.backgroundRepeat = 'no-repeat';
+
+  }
+  Animation.prototype.createAnimation = function () {
+    if (this.$trajectory == undefined) {
+      return
+    }
+    var step = this.$trajectory.length;
+    var trajectory = this.$trajectory;
+    var _this = this;
+    this.$setInterval = window.setInterval(function () {
+      _this.$el.style.backgroundPositionX = trajectory[_this.count].x + 'px';
+      _this.$el.style.backgroundPositionY = trajectory[_this.count].y + 'px';
+      _this.count++;
+      if (_this.count >= step) {
+        _this.count = 0;
+      }
+
+    }, this.$cycleTime / step)
+
+  }
+  Animation.prototype.stop = function () {
+    window.clearInterval(this.$setInterval);
+    this.$setInterval = null;
+  }
+  Animation.prototype.start = function () {
+    this.$setInterval == null && this.createAnimation();
+  }
+  Animation.prototype.getStep = function () {
+    return this.count;
+  }
+  Animation.prototype.move = function () {
+    var _this = this;
+    this.$el.style.position = 'absolute';
+    var step = this.$moveData.length;
+    var moveData = this.$moveData;
+    var moveType = this.$moveType;
+    this.$moveInterval = window.setInterval(function () {
+      _this.$el.style.left = moveData[_this.moveCount].x + 'px'
+      _this.$el.style.top = moveData[_this.moveCount].y + 'px'
+      if (_this.$moveDirection) {
+        _this.moveCount++;
+      } else {
+        _this.moveCount--;
+      }
+      if (_this.moveCount >= step) {
+        if (moveType == 'normal') {
+          window.clearInterval(_this.$moveInterval);
+          _this.$moveInterval = null;
+          _this.moveCount = 0;
+        } else if (moveType == 'back') {
+          _this.$moveDirection = false
+          _this.moveCount = step - 1;
+        }
+      }
+      if (_this.moveCount <= 0) {
+        if (moveType == 'back') {
+          _this.$moveDirection = true
+          _this.moveCount = 0;
+        }
+      }
+
+    }, this.$cycleTime / step)
+  }
+  Animation.prototype.stopMove = function () {
+    window.clearInterval(this.$moveInterval);
+    this.$moveInterval = null;
+  }
+  Animation.prototype.startMove = function () {
+    this.$moveInterval == null && this.move();
+  }
+
+
+  var option = {
+    el: '#ani',
+    backgroundUrl: './img/loading.png',
+    cycleTime: 2000,
+    moveType: 'back',
+    moveData: [{
+      x: 0,
+      y: 0,
+    }, {
+      x: 10,
+      y: 10,
+    }, {
+      x: 30,
+      y: 30,
+    }, {
+      x: 60,
+      y: 60,
+    }, {
+      x: 80,
+      y: 80,
+    }, {
+      x: 100,
+      y: 100,
+    }],
+    trajectory: [{
+      x: 3,
+      y: 0
+    }, {
+      x: -261,
+      y: 0
+    }, {
+      x: -393,
+      y: 0
+    },
+    {
+      x: -437,
+      y: 0
+    }, {
+      x: -877,
+      y: 0
+    }, {
+      x: -921,
+      y: 0
+    }, {
+      x: -1317,
+      y: 0
+    }, {
+      x: -1757,
+      y: 0
+    }, {
+      x: -2021,
+      y: 0
+    }, {
+      x: 3,
+      y: 0
+    }]
+  }
+  var animation = new Animation(option);
+  animation.createAnimation();
+  animation.move();
+  document.getElementById('stop').addEventListener('click', function () {
+    animation.stop();
+  }, false)
+  document.getElementById('start').addEventListener('click', function () {
+
+    animation.start();
+  }, false)
+  document.getElementById('getStep').addEventListener('click', function () {
+
+    var step = animation.getStep();
+    console.log(step)
+  }, false)
+  document.getElementById('start').addEventListener('click', function () {
+
+    animation.start();
+  }, false)
+  document.getElementById('startMove').addEventListener('click', function () {
+
+    animation.startMove();
+  }, false)
+  document.getElementById('stopMove').addEventListener('click', function () {
+
+    animation.stopMove();
+  }, false)
+</script>
+
+</html>
