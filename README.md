@@ -3,6 +3,6 @@
 
 公司的loding效果想使用帧动画实现，所以写了一个帧动画的简单封装。
 
-从demo1到demo3渐进式的实现。
+从demo1到demo4渐进式的实现。
 
-![Title](https://github.com/yunyi1895/frameAnimation/blob/master/img/ani.gif?raw=true)
+![gif](https://github.com/yunyi1895/frameAnimation/blob/master/img/ani2.gif?raw=true)
