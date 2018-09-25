@@ -28,7 +28,17 @@
   </div>
 </body>
 <script>
-
+/*
+option对象参数
+  el dom对象的id或者class
+  trajectory 图片背景位置list array
+  backgroundUrl 图片地址 string
+  cycleTime 切换完整背景图片需要花费的时间(单位：ms) init||float
+  handleClick 无
+  moveType 移动的类型 'normal'或者 'back' 
+  moveData 移动的位置list array
+  moveCycleTime 完成移动花费的时间(单位：ms) init||float
+*/
   function Animation(option) {
     this.$el = document.querySelector(option.el);
     this.$trajectory = option.trajectory || [];

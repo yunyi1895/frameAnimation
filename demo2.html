@@ -22,7 +22,14 @@
   </div>
 </body>
 <script>
-
+/*
+option对象参数
+  el dom对象的id或者class
+  trajectory 图片背景位置list array
+  backgroundUrl 图片地址 string
+  cycleTime 切换完整背景图片需要花费的时间(单位：ms) init||float
+  handleClick 无
+*/
   function Animation(option) {
     this.$el = document.querySelector(option.el);
     this.$trajectory = option.trajectory || [];
